@@ -1,13 +1,13 @@
 // app/api/upload/route.js
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { pdfService, upload } from '@/lib/services/pdf.services';
 import { PDFDocument } from 'pdf-lib';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
 // Multer middleware
-const multerMiddleware = (req) => {
+const multerMiddleware = (req: NextRequest) => {
     return new Promise((resolve, reject) => {
         const singleUpload = upload.single('pdf');
 
@@ -27,17 +27,19 @@ const multerMiddleware = (req) => {
     });
 }
 
-export async function POST(req) {
+export async function POST(req: NextRequest) {
     try {
         console.log('Uploading file...');
+        
         // Handle file upload
         const formData = await req.formData();
-        const file = formData.get('pdf');
-        const userId = formData.get('userId');
-        const name = file.name;
+        const file: File | null = formData.get('pdf') as File | null;
+        const userId: string = formData.get('userId') as string;
 
         // Check for file
-        if (!file) NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
+        if (!file) { return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });}
+
+        const name = file.name;
 
         // Convert file to buffer
         const bytes = await file.arrayBuffer();
@@ -49,12 +51,11 @@ export async function POST(req) {
         
         // Create a unique filename
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const filename = `${uniqueSuffix}-${file.name}`;
+        const filename = `${uniqueSuffix}-${name}`;
         const path = join(process.cwd(), 'public', 'pdfs', filename);
 
         // Write the file to disk
         await writeFile(path, buffer);
-
 
         // // Multer file processing
         // const processedReq = await multerMiddleware(req);
@@ -67,7 +68,7 @@ export async function POST(req) {
         // Create PDF record with pdfService
         const pdf = await pdfService.create({ userId, name, path, pageCount, metadata: {} });
         console.log('PDF created:', pdf);
-        return NextResponse.json(pdf, { status: 200 });
+        return NextResponse.json(pdf, { status: 201 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
