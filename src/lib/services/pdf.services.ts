@@ -29,18 +29,37 @@ export const pdfService = {
         pageCount: number; 
         metadata: any; 
     }) => { 
-        // Create a new PDF record in the database
-        const pdf = await prisma.pdf.create({
-            data: {
+
+        try {
+            // Validate input parameters - UPDATE THIS LATER
+            if (!userId || !name || !path || !pageCount || !metadata) {
+                throw new Error('Invalid input parameters');
+            }
+
+            const createData = {
                 userId,
                 name,
                 path,
                 pageCount,
                 metadata,
-            },
-        });
+            };
 
-        return pdf;
+            // Create a new PDF record in the database
+            const pdf = await prisma.PDF.create({
+                data: createData,
+            }); 
+
+            console.log('PDF created:', pdf);
+            return pdf;
+        } catch (error) {
+            console.error('Error in pdfService.create:');
+            console.error('Error message:', error.message);
+            console.error('Error details:', error);
+            if (error.code) {
+                console.error('Prisma error code:', error.code);
+            }
+            throw error;
+        }
     },
 
     // Get all PDFs for a user

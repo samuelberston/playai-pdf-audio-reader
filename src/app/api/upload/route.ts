@@ -2,6 +2,7 @@
 
 import { NextResponse } from 'next/server';
 import { pdfService, upload } from '@/lib/services/pdf.services';
+import { PDFDocument } from 'pdf-lib';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
@@ -29,15 +30,11 @@ const multerMiddleware = (req) => {
 export async function POST(req) {
     try {
         console.log('Uploading file...');
-        console.log(req.body);
         // Handle file upload
         const formData = await req.formData();
         const file = formData.get('pdf');
         const userId = formData.get('userId');
         const name = file.name;
-
-        console.log('Received file:', file);
-        console.log('User ID:', userId);
 
         // Check for file
         if (!file) NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
@@ -46,6 +43,10 @@ export async function POST(req) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
+        // Get page count and metadata
+        const pdfDoc = await PDFDocument.load(buffer);
+        const pageCount = pdfDoc.getPageCount();
+        
         // Create a unique filename
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         const filename = `${uniqueSuffix}-${file.name}`;
@@ -64,7 +65,8 @@ export async function POST(req) {
         // const metadata = processedReq.file.metadata;
 
         // Create PDF record with pdfService
-        const pdf = await pdfService.create({ userId, name, path });
+        const pdf = await pdfService.create({ userId, name, path, pageCount, metadata: {} });
+        console.log('PDF created:', pdf);
         return NextResponse.json(pdf, { status: 200 });
     } catch (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
