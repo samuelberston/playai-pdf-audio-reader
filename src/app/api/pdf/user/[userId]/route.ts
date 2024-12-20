@@ -1,6 +1,6 @@
 // GET: Retrieves all PDF IDs for a user for the sidebar
 
-import { pdfService } from '@/lib/services/pdf.services';
+import { pdfService } from '@/lib/services/pdf.service';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
