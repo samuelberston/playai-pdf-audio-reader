@@ -3,6 +3,7 @@
 import { pdfService } from '@/lib/services/pdf.service';
 import { NextRequest, NextResponse } from 'next/server';
 
+// GET: Retrieves all PDF IDs for a user for the sidebar
 export async function GET(req: NextRequest) {
     try {
         const userId = req.nextUrl.pathname.split('/').pop() as string
@@ -16,4 +17,4 @@ export async function GET(req: NextRequest) {
         console.error('Error in GET /api/pdf/user/[userId]:', error);
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
-}
+};

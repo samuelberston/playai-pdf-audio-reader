@@ -58,7 +58,7 @@ export const pdfService = {
         }
     },
 
-    // Upload a PDF file to local storage (for now)
+    // Upload a PDF file to local storage (for now - will be a cloud storage solution later)
     upload: async (file: File) => {
         // Check for file
         if (!file) { throw new Error('No file uploaded'); }
@@ -99,11 +99,26 @@ export const pdfService = {
 
             return await prisma.PDF.findMany({
                 where: { userId },
-                include: { user: false },
+                include: { user: false, userId: false, path: false },
             });
         } catch (error) {
             console.error('Error in pdfService.findByUserId:', error);
             throw error;
         }
     },
+
+    // Get a PDF by ID
+    findById: async (pdfId: string) => {
+        try {
+            // Validate pdfId - UPDATE THIS
+            if (!pdfId) {
+                throw new Error('Invalid pdfId');
+            }
+
+            return await prisma.PDF.findUnique({ where: { pdfId } });
+        } catch (error) {
+            console.error('Error in pdfService.findById:', error);
+            throw error;
+        }
+    }
 };

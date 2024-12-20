@@ -1,7 +1,7 @@
 // app/api/upload/route.js
 
 import { NextRequest, NextResponse } from 'next/server';
-import { pdfService } from '@/lib/services/pdf.services';
+import { pdfService } from '@/lib/services/pdf.service';
 
 export async function POST(req: NextRequest) {
     try {
