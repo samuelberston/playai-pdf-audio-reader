@@ -56,7 +56,7 @@ export async function createPDF({ userId, name, path, pageCount, metadata }: {
         const pdfId = uuidv4();
 
         // Create the PDF record
-        const createData = {
+        const createData: PDFRecord = {
             pdfId,
             userId,
             name,
