@@ -1,31 +1,10 @@
 // app/api/upload/route.js
 
 import { NextRequest, NextResponse } from 'next/server';
-import { pdfService, upload } from '@/lib/services/pdf.services';
+import { pdfService } from '@/lib/services/pdf.services';
 import { PDFDocument } from 'pdf-lib';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
-
-// Multer middleware
-const multerMiddleware = (req: NextRequest) => {
-    return new Promise((resolve, reject) => {
-        const singleUpload = upload.single('pdf');
-
-        // req/res object - WHY??? 
-        const nextConnectReq = {
-            ...req,
-            headers: req.headers,
-        };
-
-        singleUpload(nextConnectReq, {}, (err) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(nextConnectReq);
-            }
-        });
-    });
-}
 
 export async function POST(req: NextRequest) {
     try {
@@ -34,6 +13,7 @@ export async function POST(req: NextRequest) {
         // Handle file upload
         const formData = await req.formData();
         const file: File | null = formData.get('pdf') as File | null;
+        const pdfId: string = formData.get('pdfId') as string;
         const userId: string = formData.get('userId') as string;
 
         // Check for file
@@ -56,17 +36,9 @@ export async function POST(req: NextRequest) {
 
         // Write the file to disk
         await writeFile(path, buffer);
-
-        // // Multer file processing
-        // const processedReq = await multerMiddleware(req);
-        // const path = processedReq.file.path;
-
-        // // Get page count and metadata
-        // const pageCount = processedReq.file.pageCount;
-        // const metadata = processedReq.file.metadata;
-
+        
         // Create PDF record with pdfService
-        const pdf = await pdfService.create({ userId, name, path, pageCount, metadata: {} });
+        const pdf = await pdfService.create({ pdfId, userId, name, path, pageCount, metadata: {} });
         console.log('PDF created:', pdf);
         return NextResponse.json(pdf, { status: 201 });
     } catch (error) {

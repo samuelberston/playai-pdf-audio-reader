@@ -1,24 +1,16 @@
 import prisma from '@/prisma/index';
-import multer from 'multer'; // File upload middleware
+import { writeFile } from 'fs/promises';
+import { PDFDocument } from 'pdf-lib';
+import { v4 as uuidv4 } from 'uuid';
+import { join } from 'path';
 
-// Muster storage configuation
-const storage = multer.diskStorage({
-    destination: './public/pdfs',
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, `${uniqueSuffix}-${file.originalname}`);
-    },
-});
-    
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-    if (file.mimetype === 'application/pdf') {
-        cb(null, true);
-    } else {
-        cb(new Error('Please upload a PDF file'));
-    }
-};
-
-export const upload = multer({ storage, fileFilter });
+export interface PDFMetadata {
+    pdfId: string,
+    userId: string,
+    name: string,
+    path: string,
+    pageCount: string,
+}
 
 export const pdfService = {
     // Create a new PDF
@@ -29,14 +21,18 @@ export const pdfService = {
         pageCount: number; 
         metadata: any; 
     }) => { 
+        // Validate input parameters - UPDATE THIS LATER
+        if (!userId || !name || !path || !pageCount || !metadata) {
+            throw new Error('Invalid input parameters');
+        }
 
         try {
-            // Validate input parameters - UPDATE THIS LATER
-            if (!userId || !name || !path || !pageCount || !metadata) {
-                throw new Error('Invalid input parameters');
-            }
+            // Create a unique PDF ID
+            const pdfId = uuidv4();
 
+            // Create the PDF record
             const createData = {
+                pdfId,
                 userId,
                 name,
                 path,
@@ -62,11 +58,52 @@ export const pdfService = {
         }
     },
 
+    // Upload a PDF file to local storage (for now)
+    upload: async (file: File) => {
+        // Check for file
+        if (!file) { throw new Error('No file uploaded'); }
+
+        try {
+            // Convert file to buffer
+            const bytes  = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            
+            // Get page count and name
+            const pdfDoc    = await PDFDocument.load(buffer);
+            const pageCount = pdfDoc.getPageCount();
+            
+            // Create a unique filename
+            const name         = file.name;
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            const filename     = `${uniqueSuffix}-${name}`;
+            const path         = join(process.cwd(), 'public', 'pdfs', filename);
+    
+            // Write the file to disk - development only
+            await writeFile(path, buffer);
+    
+            return { name, path, pageCount };
+
+        } catch (error) {
+            console.error('Error in pdfService.upload:', error);
+            throw error;
+        }
+    },
+
     // Get all PDFs for a user
     findByUserId: async (userId: string) => {
-        return await prisma.pdf.findMany({
-            where: { userId },
-            include: { user: true },
-        });
+        try {
+            // Validate userId - UPDATE THIS
+            if (!userId) {
+                throw new Error('Invalid userId');
+            }
+
+            return await prisma.PDF.findMany({
+                where: { userId },
+                include: { user: false },
+            });
+        } catch (error) {
+            console.error('Error in pdfService.findByUserId:', error);
+            throw error;
+        }
     },
 };
