@@ -17,7 +17,7 @@ export default function SidebarHeader() {
             <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-600 font-medium">{initials}</span>
             </div>
-            <h1>{user.name}</h1>
+            <h1>Your PDFs</h1>
         </div>
     );
 }
