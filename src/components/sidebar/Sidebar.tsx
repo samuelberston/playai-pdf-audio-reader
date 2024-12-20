@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { pdfService } from '@/lib/services/pdf.service';
+import { findPDFsByUserId } from '@/lib/services/pdf.service';
 import SidebarHeader from './header/SiderbarHeader';
 import PDFListItem from './pdf-list/PDFListItem';
 import { useUser } from '@/contexts/UserContext';
@@ -27,7 +27,7 @@ export default function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     useEffect(() => {
         async function fetchPdfs() {
             try {
-                const userPdfs = await pdfService.findByUserId(userId); // Dummy userId for now
+                const userPdfs = await findPDFsByUserId(userId); // Dummy userId for now
                 setPdfs(userPdfs);
             } catch (error) {
                 console.error('Error in Sidebar:', error);
