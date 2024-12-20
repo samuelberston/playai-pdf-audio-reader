@@ -5,60 +5,10 @@ import { writeFile } from 'fs/promises';
 import { PDFDocument } from 'pdf-lib';
 import { v4 as uuidv4 } from 'uuid';
 import { join } from 'path';
+import { PDFObject, PDFRecord } from '@/types';
 
-export interface PDFMetadata {
-    pdfId: string,
-    userId: string,
-    name: string,
-    path: string,
-    pageCount: string,
-};
-
-export async function createPDF({ userId, name, path, pageCount, metadata }: { 
-    userId: string; 
-    name: string; 
-    path: string; 
-    pageCount: number; 
-    metadata: any; 
-}) {
-    // Validate input parameters - UPDATE THIS LATER
-    if (!userId || !name || !path || !pageCount || !metadata) {
-        throw new Error('Invalid input parameters');
-    }
-
-    try {
-        // Create a unique PDF ID
-        const pdfId = uuidv4();
-
-        // Create the PDF record
-        const createData = {
-            pdfId,
-            userId,
-            name,
-            path,
-            pageCount,
-            metadata,
-        };
-
-        // Create a new PDF record in the database
-        const pdf = await prisma.PDF.create({
-            data: createData,
-        }); 
-
-        console.log('PDF created:', pdf);
-        return pdf;
-    } catch (error) {
-        console.error('Error in pdfService.create:');
-        console.error('Error message:', error.message);
-        console.error('Error details:', error);
-        if (error.code) {
-            console.error('Prisma error code:', error.code);
-        }
-        throw error;
-    }
-}
-
-export async function uploadPDF(file: File) {
+// Upload a PDF file to the server
+export async function uploadPDF(file: File): Promise<PDFObject> {
     // Check for file
     if (!file) { throw new Error('No file uploaded'); }
 
@@ -87,6 +37,53 @@ export async function uploadPDF(file: File) {
         throw error;
     }
 }
+
+// Create a new PDF record in the database
+export async function createPDF({ userId, name, path, pageCount, metadata }: { 
+    userId: string; 
+    name: string; 
+    path: string; 
+    pageCount: number; 
+    metadata: any; 
+}): Promise<PDFRecord> {
+    // Validate input parameters - UPDATE THIS LATER
+    if (!userId || !name || !path || !pageCount || !metadata) {
+        throw new Error('Invalid input parameters');
+    }
+
+    try {
+        // Create a unique PDF ID
+        const pdfId = uuidv4();
+
+        // Create the PDF record
+        const createData = {
+            pdfId,
+            userId,
+            name,
+            path,
+            uploadedAt: new Date(),
+            pageCount,
+            metadata,
+        };
+
+        // Create a new PDF record in the database
+        const pdf: PDFRecord = await prisma.PDF.create({
+            data: createData,
+        }); 
+
+        console.log('PDF created:', pdf);
+        return pdf;
+    } catch (error) {
+        console.error('Error in pdfService.create:');
+        console.error('Error message:', error.message);
+        console.error('Error details:', error);
+        if (error.code) {
+            console.error('Prisma error code:', error.code);
+        }
+        throw error;
+    }
+}
+
 
 export async function findPDFsByUserId(userId: string) {
     try {

@@ -6,13 +6,8 @@ import SidebarHeader from './header/SiderbarHeader';
 import PDFListItem from './pdf-list/PDFListItem';
 import { useUser } from '@/contexts/UserContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { PDF } from '@/types';
 
-interface PDF {
-    pageCount: number;
-    uploadedAt: Date;
-    pdfId: string;
-    name: string;
-};
 
 interface SidebarProps {
     isOpen?: boolean;

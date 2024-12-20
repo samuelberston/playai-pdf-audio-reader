@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
 
         const formData = await req.formData();
         const file: File | null = formData.get('pdf') as File | null;
-
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
