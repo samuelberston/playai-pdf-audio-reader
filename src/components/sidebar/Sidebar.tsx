@@ -6,7 +6,7 @@ import SidebarHeader from './header/SiderbarHeader';
 import PDFListItem from './pdf-list/PDFListItem';
 import { useUser } from '@/contexts/UserContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { PDF } from '@/types';
+import { PDFListItemType } from '@/types';
 
 
 interface SidebarProps {
@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
-    const [pdfs, setPdfs] = useState<PDF[]>([]);
+    const [pdfs, setPdfs] = useState<PDFListItemType[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const { userId } = useUser();
 

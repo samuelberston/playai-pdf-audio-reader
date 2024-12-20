@@ -15,3 +15,11 @@ export interface PDFRecord {
     pageCount: number;
     metadata: Record<string, string>;
 };
+
+// Sidebar PDF List Item
+export interface PDFListItemType {
+    pdfId: string;
+    name: string;
+    uploadedAt: Date;
+    pageCount: number;
+};

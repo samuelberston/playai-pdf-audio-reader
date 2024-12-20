@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Upload from '../upload/Upload';
-import { PDF } from '@/types';
+import Upload from '../upload/UploadPDF';
+import { PDFRecord } from '@/types';
 
 interface MainContentProps {
-    selectedPdf?: PDF;
+    selectedPdf?: PDFRecord;
 }
 
 export default function MainContent({ selectedPdf }: MainContentProps) {
