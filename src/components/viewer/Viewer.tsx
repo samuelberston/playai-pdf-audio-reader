@@ -12,14 +12,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const Viewer = ({ pdf }: { pdf: PDFRecord }) => {
-    const [numPages, setNumPages] = useState<number | null>(null);
     const [pageNumber, setPageNumber] = useState<number>(1);
     return (
         <div>
-            <Document file={pdf.path} onLoadSuccess={({ numPages }) => setNumPages(numPages)}>
+            <Document file={pdf.path}>
                 <Page pageNumber={pageNumber} />
             </Document>
-            <p>Page {pageNumber} of {numPages}</p>
+            <p>Page {pageNumber} of {pdf.pageCount}</p>
         </div>
     );
 };

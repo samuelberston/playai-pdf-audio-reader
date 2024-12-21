@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Upload from '../upload/UploadPDF';
+import Viewer from '../viewer/Viewer';
 import { PDFRecord } from '@/types';
 
 interface MainContentProps {
