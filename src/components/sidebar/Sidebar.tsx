@@ -35,23 +35,58 @@ export default function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
     }, [userId]);
 
     return (
-        <div className={`fixed left-0 top-0 h-full bg-white border-r transition-all duration-300 
-            ${isOpen ? 'w-64' : 'w-16'}`}>
+        <div style={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            height: '100%',
+            borderRight: '1px solid #e5e7eb',
+            transition: 'all 300ms',
+            backgroundColor: 'var(--background)',
+            boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+            width: isOpen ? '16rem' : '4rem'
+        }}>
             <button 
                 onClick={onToggle}
-                className="absolute -right-3 top-20 bg-white border rounded-full p-1 shadow-md hover:bg-gray-50"
+                style={{
+                    position: 'absolute',
+                    right: '-0.75rem',
+                    top: '5rem',
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '9999px',
+                    padding: '0.375rem',
+                    boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
+                    transition: 'background-color 150ms'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'white'}
             >
                 {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
             </button>
             
-            <div className={`${isOpen ? 'opacity-100' : 'opacity-0'} transition-opacity duration-200`}>
+            <div style={{
+                opacity: isOpen ? 1 : 0,
+                transition: 'opacity 200ms'
+            }}>
                 <SidebarHeader />
             </div>
 
             {isLoading ? (
-                <div className={`${!isOpen && 'hidden'}`}>Loading...</div>
+                <div style={{
+                    display: !isOpen ? 'none' : 'block',
+                    padding: '1rem',
+                    color: '#4b5563'
+                }}>
+                    Loading...
+                </div>
             ) : (
-                <div className={`${!isOpen && 'hidden'} overflow-y-auto`}>
+                <div style={{
+                    display: !isOpen ? 'none' : 'block',
+                    overflowY: 'auto',
+                    paddingLeft: '0.5rem',
+                    paddingRight: '0.5rem'
+                }}>
                     {pdfs.map((pdf) => (
                         <PDFListItem
                             key={pdf.pdfId}
