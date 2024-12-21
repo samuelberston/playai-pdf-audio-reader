@@ -15,8 +15,10 @@
     "multer": "1.4.5-lts.1",
     "next": "15.1.2",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.9.155",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-pdf": "^9.2.1",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

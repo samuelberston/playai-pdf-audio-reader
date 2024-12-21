@@ -1,7 +1,14 @@
 // GET: Retrieves all PDF IDs for a user for the sidebar
 
-import { uploadPDF, findPDFsByUserId, createPDF } from '@/lib/services/pdf.service';
+import { uploadPDF, createPDF, findPDFsByUserId } from '@/lib/services/pdf.service';
 import { NextRequest, NextResponse } from 'next/server';
+import { PDFRecord } from '@/types';
+
+interface PDFListItem {
+    pdfId: string;
+    name: string;
+    pageCount: number;
+}
 
 // GET: Retrieves all PDF IDs for a user for the sidebar
 export async function GET(req: NextRequest) {
@@ -11,7 +18,7 @@ export async function GET(req: NextRequest) {
         if (!userId) {
             throw new Error('Invalid userId');
         }
-        const pdfs = await findPDFsByUserId(userId);
+        const pdfs: PDFListItem[] = await findPDFsByUserId(userId);
         return NextResponse.json({PDFs: pdfs}, {status: 200});
     } catch (error) {
         console.error('Error in GET /api/pdf/user/[userId]:', error);
@@ -37,7 +44,7 @@ export async function POST(req: NextRequest) {
         const { name, path, pageCount } = await uploadPDF(file);
         
         // Create PDF record with pdfService
-        const pdf = await createPDF({ userId, name, path, pageCount, metadata: {} });
+        const pdf: PDFRecord = await createPDF({ userId, name, path, pageCount, metadata: {} });
 
         return NextResponse.json(pdf, { status: 201 });
     } catch (error) {
