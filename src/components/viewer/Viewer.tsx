@@ -1,24 +1,24 @@
 'use client';
 
 import { useState } from 'react';
-import Form from 'next/form';
 import { PDFRecord } from '@/types';
 import { pdfjs, Document, Page } from 'react-pdf';
-import type { PDFDocumentProxy } from 'pdfjs-dist';
+// import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.js',
-    import.meta.url,
-).toString();
+// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+//     'pdfjs-dist/build/pdf.worker.min.js',
+//     import.meta.url,
+// ).toString();
 
-const Viewer = ({ pdf }: { pdf: PDFRecord }) => {
+const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
+    const { path, pageCount } = selectedPDF;
     return (
         <div>
-            <Document file={pdf.path}>
+            <Document file={path}>
                 <Page pageNumber={pageNumber} />
             </Document>
-            <p>Page {pageNumber} of {pdf.pageCount}</p>
+            <p>Page {pageNumber} of {pageCount}</p>
         </div>
     );
 };

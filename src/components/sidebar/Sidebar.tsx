@@ -1,39 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { findPDFsByUserId } from '@/lib/services/pdf.service';
 import SidebarHeader from './header/SiderbarHeader';
 import PDFListItem from './pdf-list/PDFListItem';
-import { useUser } from '@/contexts/UserContext';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { PDFListItemType } from '@/types';
 
-
 interface SidebarProps {
-    isOpen?: boolean;
-    onToggle?: () => void;
+    isOpen: boolean;
+    onToggle: () => void;
+    pdfs: PDFListItemType[];
 }
 
-export default function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
-    const [pdfs, setPdfs] = useState<PDFListItemType[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const { userId } = useUser();
-
-    useEffect(() => {
-        async function fetchPdfs() {
-            try {
-                const userPdfs = await findPDFsByUserId(userId); // Dummy userId for now
-                setPdfs(userPdfs);
-            } catch (error) {
-                console.error('Error in Sidebar:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-
-        fetchPdfs();
-    }, [userId]);
-
+export default function Sidebar({ isOpen = true, onToggle, pdfs }: SidebarProps) {
     return (
         <div style={{
             position: 'fixed',
@@ -72,32 +50,22 @@ export default function Sidebar({ isOpen = true, onToggle }: SidebarProps) {
                 <SidebarHeader />
             </div>
 
-            {isLoading ? (
-                <div style={{
-                    display: !isOpen ? 'none' : 'block',
-                    padding: '1rem',
-                    color: '#4b5563'
-                }}>
-                    Loading...
-                </div>
-            ) : (
-                <div style={{
-                    display: !isOpen ? 'none' : 'block',
-                    overflowY: 'auto',
-                    paddingLeft: '0.5rem',
-                    paddingRight: '0.5rem'
-                }}>
-                    {pdfs.map((pdf) => (
-                        <PDFListItem
-                            key={pdf.pdfId}
-                            name={pdf.name}
-                            pdfId={pdf.pdfId}
-                            uploadedAt={pdf.uploadedAt}
-                            pageCount={pdf.pageCount}
-                        />
-                    ))}
-                </div>
-            )}
+            <div style={{
+                display: !isOpen ? 'none' : 'block',
+                overflowY: 'auto',
+                paddingLeft: '0.5rem',
+                paddingRight: '0.5rem'
+            }}>
+                {pdfs && pdfs.map((pdf) => (
+                    <PDFListItem
+                        key={pdf.pdfId}
+                        name={pdf.name}
+                        pdfId={pdf.pdfId}
+                        uploadedAt={pdf.uploadedAt}
+                        pageCount={pdf.pageCount}
+                    />
+                ))}
+            </div>
         </div>
     );
 };
