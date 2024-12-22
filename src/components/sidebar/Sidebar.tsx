@@ -46,7 +46,13 @@ export default function Sidebar({ isOpen = true, onToggle, pdfs, onPDFSelect }: 
             
             <div style={{
                 opacity: isOpen ? 1 : 0,
-                transition: 'opacity 200ms'
+                transition: 'opacity 200ms',
+                position: 'fixed',
+                width: isOpen ? '16rem' : '4rem',
+                padding: '1rem',
+                backgroundColor: 'var(--background)',
+                borderBottom: '1px solid #e5e7eb',
+                zIndex: 10
             }}>
                 <SidebarHeader />
             </div>
@@ -55,7 +61,9 @@ export default function Sidebar({ isOpen = true, onToggle, pdfs, onPDFSelect }: 
                 display: !isOpen ? 'none' : 'block',
                 overflowY: 'auto',
                 paddingLeft: '0.5rem',
-                paddingRight: '0.5rem'
+                paddingRight: '0.5rem',
+                height: 'calc(100% - 4rem)',
+                marginTop: '4rem'
             }}>
                 {pdfs && pdfs.map((pdf) => (
                     <PDFListItem
