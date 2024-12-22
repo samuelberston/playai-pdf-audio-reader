@@ -62,6 +62,7 @@ export default function Sidebar({ isOpen = true, onToggle, pdfs, onPDFSelect }: 
                 overflowY: 'auto',
                 paddingLeft: '0.5rem',
                 paddingRight: '0.5rem',
+                paddingTop: '1rem',
                 height: 'calc(100% - 4rem)',
                 marginTop: '4rem'
             }}>

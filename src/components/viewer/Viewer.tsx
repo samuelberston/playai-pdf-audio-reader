@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PDFRecord } from '@/types';
 import { pdfjs, Document, Page } from 'react-pdf';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 // import type { PDFDocumentProxy } from 'pdfjs-dist';
@@ -18,6 +19,18 @@ const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
     const pdfName = path.split('/').pop();
     const pdfUrl = `/pdfs/${pdfName}`;
 
+    const nextPage = () => {
+        if (pageNumber < pageCount) {
+            setPageNumber(pageNumber + 1);
+        }
+    }
+
+    const prevPage = () => {
+        if (pageNumber > 1) {
+            setPageNumber(pageNumber - 1);
+        }
+    }
+
     return (
         <div className="w-full h-full flex flex-col items-center overflow-auto">
             <Document file={pdfUrl} className="max-h-full">
@@ -28,7 +41,27 @@ const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
                     height={800}
                 />
             </Document>
-            <p className="mt-4">Page {pageNumber} of {pageCount}</p>
+            <div className="flex items-center gap-4 mt-4">
+                {pageNumber > 1 && (
+                    <button 
+                        onClick={prevPage}
+                        disabled={pageNumber <= 1}
+                        className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
+                >
+                        <ChevronLeft size={24} />
+                    </button>
+                )}
+                <p>Page {pageNumber} of {pageCount}</p>
+                {pageNumber < pageCount && (
+                    <button 
+                        onClick={nextPage}
+                        disabled={pageNumber >= pageCount}
+                        className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
+                )}
+            </div>
         </div>
     );
 };
