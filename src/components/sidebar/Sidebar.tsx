@@ -9,9 +9,10 @@ interface SidebarProps {
     isOpen: boolean;
     onToggle: () => void;
     pdfs: PDFListItemType[];
+    onPDFSelect: (pdfId: string) => void;
 }
 
-export default function Sidebar({ isOpen = true, onToggle, pdfs }: SidebarProps) {
+export default function Sidebar({ isOpen = true, onToggle, pdfs, onPDFSelect }: SidebarProps) {
     return (
         <div style={{
             position: 'fixed',
@@ -30,15 +31,15 @@ export default function Sidebar({ isOpen = true, onToggle, pdfs }: SidebarProps)
                     position: 'absolute',
                     right: '-0.75rem',
                     top: '5rem',
-                    backgroundColor: 'white',
+                    backgroundColor: 'grey',
                     border: '1px solid #e5e7eb',
                     borderRadius: '9999px',
                     padding: '0.375rem',
                     boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
                     transition: 'background-color 150ms'
                 }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#404040'}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'grey'}
             >
                 {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
             </button>
@@ -63,6 +64,7 @@ export default function Sidebar({ isOpen = true, onToggle, pdfs }: SidebarProps)
                         pdfId={pdf.pdfId}
                         uploadedAt={pdf.uploadedAt}
                         pageCount={pdf.pageCount}
+                        onSelect={onPDFSelect}
                     />
                 ))}
             </div>

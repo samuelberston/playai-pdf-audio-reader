@@ -3,15 +3,15 @@ interface PDFListItemProps {
     pdfId: string;
     uploadedAt: Date;
     pageCount: number;
-    onClick?: () => void;
+    onSelect: (pdfId: string) => void;
 };
 
-export default function PDFListItem({ name, pdfId, uploadedAt, pageCount, onClick }: PDFListItemProps) {
+export default function PDFListItem({ name, pdfId, uploadedAt, pageCount, onSelect }: PDFListItemProps) {
     const formattedDate = getRelativeTimeString(uploadedAt);
     return (
         <div 
             id={pdfId} 
-            onClick={onClick}
+            onClick={() => onSelect(pdfId)}
             style={{
                 backgroundColor: '#2A2A2A',
                 color: '#E0E0E0',

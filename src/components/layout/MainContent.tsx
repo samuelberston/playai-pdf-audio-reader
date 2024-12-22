@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Upload from '../upload/UploadPDF';
 import Viewer from '../viewer/Viewer';
 import Sidebar from '../sidebar/Sidebar';
@@ -23,10 +23,25 @@ export default function MainContent() {
             console.error('Error fetching PDFs:', error);
         }
     };
+    const cachedFetchPdfs = useCallback(fetchPdfs, [userId]);
 
     useEffect(() => {
-        fetchPdfs();
-    }, [userId]);
+        cachedFetchPdfs();
+    }, [userId, cachedFetchPdfs]);
+
+    const handlePDFSelect = async (pdfId: string) => {
+        try {
+            // Fetch PDF data from backend using pdfId
+            const response = await fetch(`/api/pdfs/${pdfId}`);
+            // Update to just get the path
+            const pdfData = await response.blob();
+            
+            // Update your viewer state with the PDF data
+            setSelectedPDF(pdfData); // or however you're handling the viewer state
+        } catch (error) {
+            console.error('Error loading PDF:', error);
+        }
+    };
 
     return (
         <div className="flex min-h-screen">
@@ -34,11 +49,12 @@ export default function MainContent() {
                 pdfs={pdfs}
                 isOpen={isSidebarOpen}
                 onToggle={() => setIsSidebarOpen(!isSidebarOpen)}
+                onPDFSelect={handlePDFSelect}
             />
             <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-[240px]' : 'ml-[60px]'}`}>
                 <div className="h-full flex items-center justify-center">
                     {activeMode === 'upload' ? (
-                        <div className="max-w-lg w-full">
+                        <div className="max-w-lg w-full mt-32 mx-auto">
                             <Upload 
                                 onUploadComplete={() => {
                                     fetchPdfs();

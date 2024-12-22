@@ -4,10 +4,6 @@ import { Upload } from 'lucide-react';
 import { PDFObject, PDFRecord } from '@/types';
 import { useState } from 'react';
 
-interface UploadProps {
-    onUploadComplete?: () => void;
-}
-
 export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () => void }) {
     const { userId } = useUser();
     const [isUploading, setIsUploading] = useState(false);
@@ -19,7 +15,7 @@ export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () =
             // Upload PDF and retrieve PDF object
             const pdfObject: PDFObject = await uploadPDF(file);
             // Create PDF record in database
-            const pdfRecord: PDFRecord = await createPDF({ userId, name: pdfObject.name, path: pdfObject.path, pageCount: pdfObject.pageCount, metadata: {} });
+            await createPDF({ userId, name: pdfObject.name, path: pdfObject.path, pageCount: pdfObject.pageCount, metadata: {} });
             onUploadComplete?.();
         } catch (error) {
             console.error('Error in UploadPDF:', error);
@@ -51,15 +47,15 @@ export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () =
 
     return (
         <div
-            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
-                ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300'}
+            className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer w-full max-w-2xl mx-auto
+                ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:bg-gray-50'}
                 ${isUploading ? 'opacity-50 cursor-not-allowed' : 'hover:border-blue-500'}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
         >
-            <Upload />
-            <p className="mt-2 text-sm text-gray-600">
+            <Upload className="w-12 h-12 mx-auto text-gray-400" />
+            <p className="mt-4 text-lg text-gray-600">
                 {isUploading ? 'Uploading...' : 'Drag and drop your PDF here'}
             </p>
         </div>
