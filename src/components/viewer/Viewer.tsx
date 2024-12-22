@@ -13,9 +13,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
     const { path, pageCount } = selectedPDF;
+    const pdfName = path.split('/').pop();
+    console.log(pdfName);
+    const pdfUrl = `/pdfs/${pdfName}`
     return (
         <div>
-            <Document file={path}>
+            <Document file={pdfUrl}>
                 <Page pageNumber={pageNumber} />
             </Document>
             <p>Page {pageNumber} of {pageCount}</p>
