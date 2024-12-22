@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 interface PDFListItemProps {
     name: string;
     pdfId: string;
@@ -7,13 +9,16 @@ interface PDFListItemProps {
 };
 
 export default function PDFListItem({ name, pdfId, uploadedAt, pageCount, onSelect }: PDFListItemProps) {
+    const [isHovered, setIsHovered] = useState(false);
     const formattedDate = getRelativeTimeString(uploadedAt);
     return (
         <div 
             id={pdfId} 
             onClick={() => onSelect(pdfId)}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             style={{
-                backgroundColor: '#2A2A2A',
+                backgroundColor: isHovered ? '#363636' : '#2A2A2A',
                 color: '#E0E0E0',
                 padding: '16px',
                 borderRadius: '6px',
@@ -23,6 +28,7 @@ export default function PDFListItem({ name, pdfId, uploadedAt, pageCount, onSele
                 marginRight: '8px',
                 border: '1px solid transparent',
                 boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                transition: 'background-color 0.2s ease',
             }}
         >
             <div style={{ 
