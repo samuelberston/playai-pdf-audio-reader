@@ -33,6 +33,7 @@ export default function MainContent() {
         try {
             // Fetch PDF data from backend using pdfId
             const pdfRecord: PDFRecord = await findPDFById(pdfId);
+            console.log('pdfRecord: ', pdfRecord);
 
             setSelectedPDF(pdfRecord);
             setActiveMode('viewer');
@@ -58,12 +59,19 @@ export default function MainContent() {
                                     fetchPdfs();
                                     setActiveMode('viewer');
                                 }} 
+                                onPDFSelected={handlePDFSelect}
                             />
                         </div>
                     </div>
                 ) : (
                     <div className="h-full p-4">
-                        <Viewer selectedPDF={selectedPDF} />
+                        {selectedPDF ? (
+                            <Viewer selectedPDF={selectedPDF} />
+                        ) : (
+                            <div className="flex items-center justify-center h-full">
+                                <p className="text-gray-500">No PDF selected</p>
+                            </div>
+                        )}
                     </div>
                 )}
             </main>

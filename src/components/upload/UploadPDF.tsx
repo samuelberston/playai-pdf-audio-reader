@@ -4,7 +4,12 @@ import { Upload } from 'lucide-react';
 import { PDFObject, PDFRecord } from '@/types';
 import { useState } from 'react';
 
-export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () => void }) {
+interface UploadPDFProps {
+    onUploadComplete: () => void;
+    onPDFSelected: (pdfId: string) => void;
+}
+
+export default function UploadPDF({ onUploadComplete, onPDFSelected }: UploadPDFProps) {
     const { userId } = useUser();
     const [isUploading, setIsUploading] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
@@ -15,7 +20,16 @@ export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () =
             // Upload PDF and retrieve PDF object
             const pdfObject: PDFObject = await uploadPDF(file);
             // Create PDF record in database
-            await createPDF({ userId, name: pdfObject.name, path: pdfObject.path, pageCount: pdfObject.pageCount, metadata: {} });
+            const pdfRecord: PDFRecord = await createPDF({ 
+                userId, 
+                name: pdfObject.name, 
+                path: pdfObject.path, 
+                pageCount: pdfObject.pageCount, 
+                metadata: {} 
+            });
+            
+            // Wait for the PDF to be selected before completing the upload
+            await onPDFSelected(pdfRecord.pdfId);
             onUploadComplete();
         } catch (error) {
             console.error('Error in UploadPDF:', error);
