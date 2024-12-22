@@ -42,7 +42,7 @@ export default function MainContent() {
     };
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex h-screen">
             <Sidebar 
                 pdfs={pdfs}
                 isOpen={isSidebarOpen}
@@ -50,9 +50,9 @@ export default function MainContent() {
                 onPDFSelect={handlePDFSelect}
             />
             <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-[240px]' : 'ml-[60px]'}`}>
-                <div className="h-full flex items-center justify-center">
-                    {activeMode === 'upload' ? (
-                        <div className="max-w-lg w-full mt-32 mx-auto">
+                {activeMode === 'upload' ? (
+                    <div className="h-full flex items-center justify-center p-4">
+                        <div className="max-w-lg w-full mx-auto">
                             <Upload 
                                 onUploadComplete={() => {
                                     fetchPdfs();
@@ -60,12 +60,12 @@ export default function MainContent() {
                                 }} 
                             />
                         </div>
-                    ) : (
-                        <div className="w-full h-full">
-                            <Viewer selectedPDF={selectedPDF} />
-                        </div>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <div className="h-full p-4">
+                        <Viewer selectedPDF={selectedPDF} />
+                    </div>
+                )}
             </main>
         </div>
     );
