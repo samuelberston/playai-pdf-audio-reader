@@ -24,7 +24,8 @@ const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
                 <Page 
                     pageNumber={pageNumber} 
                     className="max-w-full"
-                    scale={1.0}
+                    scale={0.8}
+                    height={800}
                 />
             </Document>
             <p className="mt-4">Page {pageNumber} of {pageCount}</p>
