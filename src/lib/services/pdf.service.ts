@@ -95,6 +95,9 @@ export async function findPDFsByUserId(userId: string) {
         return await prisma.PDF.findMany({
             where: { userId },
             include: { user: false, userId: false, path: false },
+            orderBy: { 
+                uploadedAt: 'desc' 
+            },
         });
     } catch (error) {
         console.error('Error in pdfService.findByUserId:', error);
