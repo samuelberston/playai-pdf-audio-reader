@@ -16,10 +16,9 @@ export default function UploadPDF({ onUploadComplete }: { onUploadComplete: () =
             const pdfObject: PDFObject = await uploadPDF(file);
             // Create PDF record in database
             await createPDF({ userId, name: pdfObject.name, path: pdfObject.path, pageCount: pdfObject.pageCount, metadata: {} });
-            onUploadComplete?.();
+            onUploadComplete();
         } catch (error) {
             console.error('Error in UploadPDF:', error);
-            setIsUploading(false);
         } finally {
             setIsUploading(false);
         }
