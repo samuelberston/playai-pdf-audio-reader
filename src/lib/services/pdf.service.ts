@@ -105,7 +105,7 @@ export async function findPDFsByUserId(userId: string) {
     }
 }
 
-export async function findPDFById(pdfId: string) {
+export async function findPDFById(pdfId: string): Promise<PDFRecord> {
     try {
         // Validate pdfId - UPDATE THIS
         if (!pdfId) {

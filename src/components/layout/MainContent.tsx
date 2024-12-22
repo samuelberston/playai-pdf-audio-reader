@@ -5,7 +5,7 @@ import Upload from '../upload/UploadPDF';
 import Viewer from '../viewer/Viewer';
 import Sidebar from '../sidebar/Sidebar';
 import { PDFRecord, PDFListItemType } from '@/types';
-import { findPDFsByUserId } from '@/lib/services/pdf.service';
+import { findPDFsByUserId, findPDFById } from '@/lib/services/pdf.service';
 import { useUser } from '@/contexts/UserContext';
 
 export default function MainContent() {
@@ -32,12 +32,10 @@ export default function MainContent() {
     const handlePDFSelect = async (pdfId: string) => {
         try {
             // Fetch PDF data from backend using pdfId
-            const response = await fetch(`/api/pdfs/${pdfId}`);
-            // Update to just get the path
-            const pdfData = await response.blob();
-            
-            // Update your viewer state with the PDF data
-            setSelectedPDF(pdfData); // or however you're handling the viewer state
+            const pdfRecord: PDFRecord = await findPDFById(pdfId);
+
+            setSelectedPDF(pdfRecord);
+            setActiveMode('viewer');
         } catch (error) {
             console.error('Error loading PDF:', error);
         }

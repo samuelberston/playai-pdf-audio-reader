@@ -5,10 +5,10 @@ import { PDFRecord } from '@/types';
 import { pdfjs, Document, Page } from 'react-pdf';
 // import type { PDFDocumentProxy } from 'pdfjs-dist';
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//     'pdfjs-dist/build/pdf.worker.min.js',
-//     import.meta.url,
-// ).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url,
+).toString();
 
 const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
