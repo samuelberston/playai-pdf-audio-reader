@@ -66,7 +66,7 @@ export default function MainContent() {
                 ) : (
                     <div className="h-full p-4">
                         {selectedPDF ? (
-                            <Viewer selectedPDF={selectedPDF} />
+                            <Viewer selectedPDF={selectedPDF} setActiveMode={setActiveMode}/>
                         ) : (
                             <div className="flex items-center justify-center h-full">
                                 <p className="text-gray-500">No PDF selected</p>

@@ -13,7 +13,12 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     import.meta.url,
 ).toString();
 
-const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
+interface ViewerProps {
+    selectedPDF: PDFRecord;
+    setActiveMode: (mode: string) => void;
+}
+
+const Viewer = ({ selectedPDF, setActiveMode }: ViewerProps) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
     const { path, pageCount } = selectedPDF;
     const pdfName = path.split('/').pop();
@@ -61,6 +66,14 @@ const Viewer = ({ selectedPDF }: { selectedPDF: PDFRecord }) => {
                         <ChevronRight size={24} />
                     </button>
                 )}
+            </div>
+            <div className="mt-3">
+                <button 
+                    onClick={() => setActiveMode('upload')}
+                    className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors"
+                >
+                    Upload another PDF
+                </button>
             </div>
         </div>
     );
