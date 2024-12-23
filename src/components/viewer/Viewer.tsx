@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { PDFRecord } from '@/types';
 import { pdfjs, Document, Page } from 'react-pdf';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
+
+import { AudioPlayer } from './audio-player/AudioPlayer';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -13,15 +14,13 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 interface ViewerProps {
-    selectedPDF: PDFRecord;
+    pdfUrl: string;
+    pageCount: number;
     setActiveMode: (mode: string) => void;
 }
 
-const Viewer = ({ selectedPDF, setActiveMode }: ViewerProps) => {
+const Viewer = ({ pdfUrl, pageCount, setActiveMode }: ViewerProps) => {
     const [pageNumber, setPageNumber] = useState<number>(1);
-    const { path, pageCount } = selectedPDF;
-    const pdfName = path.split('/').pop();
-    const pdfUrl = `/pdfs/${pdfName}`;
 
     const nextPage = () => {
         if (pageNumber < pageCount) {
@@ -37,6 +36,7 @@ const Viewer = ({ selectedPDF, setActiveMode }: ViewerProps) => {
 
     return (
         <div className="w-full h-full flex flex-col items-center justify-center overflow-auto">
+            {/* <AudioPlayer pdfUrl={pdfUrl} page={pageNumber} /> */}
             <Document file={pdfUrl} className="max-h-full">
                 <Page 
                     pageNumber={pageNumber} 

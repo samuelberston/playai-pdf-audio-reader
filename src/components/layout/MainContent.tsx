@@ -4,14 +4,14 @@ import { useState, useEffect, useCallback } from 'react';
 import Upload from '../upload/UploadPDF';
 import Viewer from '../viewer/Viewer';
 import Sidebar from '../sidebar/Sidebar';
-import { PDFRecord, PDFListItemType } from '@/types';
+import { PDFRecord, PDFListItemType, ViewerPDF } from '@/types';
 import { findPDFsByUserId, findPDFById } from '@/lib/services/pdf.service';
 import { useUser } from '@/contexts/UserContext';
 
 export default function MainContent() {
     const [activeMode, setActiveMode] = useState<'upload' | 'viewer'>('upload');
     const [pdfs, setPdfs] = useState<PDFListItemType[]>([]);
-    const [selectedPDF, setSelectedPDF] = useState<PDFRecord | undefined>();
+    const [selectedPDF, setSelectedPDF] = useState<ViewerPDF | undefined>();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const { userId } = useUser();
 
@@ -31,11 +31,10 @@ export default function MainContent() {
 
     const handlePDFSelect = async (pdfId: string) => {
         try {
-            // Fetch PDF data from backend using pdfId
             const pdfRecord: PDFRecord = await findPDFById(pdfId);
-            console.log('pdfRecord: ', pdfRecord);
-
-            setSelectedPDF(pdfRecord);
+            const pdfUrl = `/pdfs/${pdfRecord.path.split('/').pop()}`;
+            
+            setSelectedPDF({ pdfUrl, pageCount: pdfRecord.pageCount });
             setActiveMode('viewer');
         } catch (error) {
             console.error('Error loading PDF:', error);
@@ -66,7 +65,7 @@ export default function MainContent() {
                 ) : (
                     <div className="h-full p-4 flex items-center justify-center">
                         {selectedPDF ? (
-                            <Viewer selectedPDF={selectedPDF} setActiveMode={setActiveMode}/>
+                            <Viewer pdfUrl={selectedPDF.pdfUrl} pageCount={selectedPDF.pageCount} setActiveMode={setActiveMode}/>
                         ) : (
                             <div className="flex items-center justify-center h-full">
                                 <p className="text-gray-500">No PDF selected</p>
