@@ -26,3 +26,16 @@ model PDF {
   pageCount  Int
   metadata   Json
 }
+
+model Audio {
+  id         Int      @id @default(autoincrement())
+  audioId    String   @unique
+  user       User     @relation(fields: [userId], references: [userId])
+  userId     String
+  pdf        PDF      @relation(fields: [pdfId], references: [id])
+  pdfId      Int
+  page       Int
+  name       String
+  path       String
+  uploadedAt DateTime @default(now())
+}
