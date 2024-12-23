@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
 
 interface PDFListItemProps {
     name: string;
@@ -10,7 +12,12 @@ interface PDFListItemProps {
 
 export default function PDFListItem({ name, pdfId, uploadedAt, pageCount, onSelect }: PDFListItemProps) {
     const [isHovered, setIsHovered] = useState(false);
-    const formattedDate = getRelativeTimeString(uploadedAt);
+    const [formattedDate, setFormattedDate] = useState('');
+    
+    useEffect(() => {
+        setFormattedDate(getRelativeTimeString(uploadedAt));
+    }, [uploadedAt]);
+    
     return (
         <div 
             id={pdfId} 
