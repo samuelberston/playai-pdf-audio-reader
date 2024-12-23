@@ -64,7 +64,7 @@ export default function MainContent() {
                         </div>
                     </div>
                 ) : (
-                    <div className="h-full p-4">
+                    <div className="h-full p-4 flex items-center justify-center">
                         {selectedPDF ? (
                             <Viewer selectedPDF={selectedPDF} setActiveMode={setActiveMode}/>
                         ) : (

@@ -36,7 +36,7 @@ const Viewer = ({ selectedPDF, setActiveMode }: ViewerProps) => {
     }
 
     return (
-        <div className="w-full h-full flex flex-col items-center overflow-auto">
+        <div className="w-full h-full flex flex-col items-center justify-center overflow-auto">
             <Document file={pdfUrl} className="max-h-full">
                 <Page 
                     pageNumber={pageNumber} 
