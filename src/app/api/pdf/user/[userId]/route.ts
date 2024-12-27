@@ -13,7 +13,7 @@ interface PDFListItem {
 // GET: Retrieves all PDF IDs for a user for the sidebar
 export async function GET(req: NextRequest) {
     try {
-        const userId = req.nextUrl.pathname.split('/').pop() as string
+        const userId: string | undefined = req.nextUrl.pathname.split('/').pop();
         // Validate userId - use validator function...
         if (!userId) {
             throw new Error('Invalid userId');
@@ -29,13 +29,13 @@ export async function GET(req: NextRequest) {
 // POST: Upload a new PDF for a specific user
 export async function POST(req: NextRequest) {
     try {
-        const userId = req.nextUrl.pathname.split('/').pop() as string;
+        const userId: string | undefined = req.nextUrl.pathname.split('/').pop();
         if (!userId) {
             throw new Error('Invalid userId');
         }
 
         const formData = await req.formData();
-        const file: File | null = formData.get('pdf') as File | null;
+        const file: File | null = formData.get('pdf');
         if (!file) {
             return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
         }
